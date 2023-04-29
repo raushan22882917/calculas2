@@ -1,0 +1,167 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMlJNZc7/qRJAD5XJUl1ji8",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/raushan22882917/calculas2/blob/main/gradient%20decent\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 3,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-7XhwruQSTuT",
+        "outputId": "555ddb1d-5689-4369-8b4a-ae728bba9d89"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "7.707999820014133e-20\n"
+          ]
+        }
+      ],
+      "source": [
+        "def square(x):\n",
+        "    '''\n",
+        "    Returns the square of x.\n",
+        "\n",
+        "    Parameter x: A number.\n",
+        "    Precondition: None.\n",
+        "    '''\n",
+        "    return x ** 2\n",
+        "\n",
+        "def gradient(f, x, h=0.001):\n",
+        "    '''\n",
+        "    Returns the gradient of f at x using a small step h.\n",
+        "\n",
+        "    Parameters:\n",
+        "    f: A function of one variable.\n",
+        "    x: A number at which to compute the gradient.\n",
+        "    h: A small step size. Default is 0.001.\n",
+        "\n",
+        "    Precondition: None.\n",
+        "    '''\n",
+        "    return (f(x + h) - f(x - h)) / (2 * h)\n",
+        "\n",
+        "x_n = 100.0 # initially randomly chosen point\n",
+        "alpha = 0.1 # learning rate\n",
+        "val = True\n",
+        "while val:\n",
+        "    grad = gradient(square, x_n) # compute gradient at x_n\n",
+        "    if grad > 0:\n",
+        "        x_n = x_n - alpha * grad # update x_n using gradient descent\n",
+        "    else:\n",
+        "        val = False # exit the loop if gradient is non-positive\n",
+        "print(x_n)\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def gradient_descent(f, grad_f, x0, alpha=0.001, max_iter=1000, tol=1e-6):\n",
+        "    '''\n",
+        "    Return: The minimum value of the given function f.\n",
+        "\n",
+        "    Parameter f: It is a function to be minimized.\n",
+        "    Precondition: It must take a tuple of n arguments.\n",
+        "\n",
+        "    Parameter grad_f: It is a function to calculate the gradient of f.\n",
+        "    Precondition: It must take a tuple of n arguments.\n",
+        "\n",
+        "    Parameter x0: It is a list of n initial values for the variables.\n",
+        "    Precondition: It must have n elements.\n",
+        "\n",
+        "    Parameter alpha: It is a float learning rate.\n",
+        "    Precondition: It must be positive.\n",
+        "\n",
+        "    Parameter max_iter: It is an integer maximum number of iterations.\n",
+        "    Precondition: It must be positive.\n",
+        "\n",
+        "    Parameter tol: It is a float tolerance for stopping criterion.\n",
+        "    Precondition: It must be positive.\n",
+        "    '''\n",
+        "    x = x0.copy()\n",
+        "    prev_grad = [0.0] * len(x)\n",
+        "    iter_count = 0\n",
+        "    while iter_count < max_iter:\n",
+        "        grad = grad_f(x)\n",
+        "        x = [x[i] - alpha * grad[i] for i in range(len(x))]\n",
+        "        if sum([(grad[i] - prev_grad[i])**2 for i in range(len(x))]) < tol**2:\n",
+        "            break\n",
+        "        prev_grad = grad\n",
+        "        iter_count += 1\n",
+        "    return x, f(x)\n",
+        "\n",
+        "def f(x):\n",
+        "    '''\n",
+        "    Return: The sum of squares of the input variables.\n",
+        "\n",
+        "    Parameter x: It is a tuple of n arguments.\n",
+        "    Precondition: It must have n elements.\n",
+        "    '''\n",
+        "    return sum([xi**2 for xi in x])\n",
+        "\n",
+        "def grad_f(x):\n",
+        "    '''\n",
+        "    Return: The gradient of the sum of squares function.\n",
+        "\n",
+        "    Parameter x: It is a tuple of n arguments.\n",
+        "    Precondition: It must have n elements.\n",
+        "    '''\n",
+        "    return [2*xi for xi in x]\n",
+        "\n",
+        "x0 = [float(input(f\"enter value {i} start with:\")) for i in range(1, 3)]\n",
+        "alpha = 0.001\n",
+        "x_min, f_min = gradient_descent(f, grad_f, x0, alpha=alpha)\n",
+        "\n",
+        "print(\"Minimum value:\", f_min)\n",
+        "print(\"Minimum point:\", x_min)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LQh-Pkg7WTd3",
+        "outputId": "6edb6efc-6138-4d9a-dd95-fcb7317479bd"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "enter value 1 start with:56.3\n",
+            "enter value 2 start with:98.6\n",
+            "Minimum value: 235.174961135766\n",
+            "Minimum point: [7.60413261374827, 13.317361913243024]\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
